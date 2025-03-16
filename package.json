@@ -1,0 +1,38 @@
+{
+  "name": "bloxi-monorepo",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Bloxi Framework Monorepo",
+  "author": "Eric Kweyunga",
+  "license": "MIT",
+  "scripts": {
+    "build": "pnpm -r build",
+    "dev": "pnpm -r dev",
+    "clean": "pnpm -r clean",
+    "test": "pnpm -r test",
+    "lint": "pnpm -r lint",
+    "typecheck": "pnpm -r typecheck",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "pnpm build && changeset publish"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.26.2",
+    "@typescript-eslint/eslint-plugin": "^8.26.1",
+    "@typescript-eslint/parser": "^8.0.0",
+    "eslint": "^9.22.0",
+    "eslint-config-prettier": "^10.1.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "lint-staged": "^15.5.0",
+    "prettier": "^3.5.0",
+    "rimraf": "^6.0.0",
+    "typescript": "^5.0.4"
+  },
+  "packageManager": "pnpm@8.7.0",
+  "engines": {
+    "node": ">=16.0.0",
+    "pnpm": ">=8.0.0"
+  }
+}

@@ -1,0 +1,84 @@
+import React from "react";
+
+/**
+ * Internal counter for generating unique keys
+ */
+let keyCounter = 0;
+
+/**
+ * Ensures a React element has a key
+ */
+function ensureElementKey(
+  element: React.ReactNode,
+  index: number
+): React.ReactNode {
+  // Only process React elements
+  if (!React.isValidElement(element)) {
+    return element;
+  }
+
+  // If already has a key, return as is
+  if (element.key != null) {
+    return element;
+  }
+
+  // Clone with a generated key
+  return React.cloneElement(element, { key: `bloxi-${index}-${keyCounter++}` });
+}
+
+/**
+ * Process children to ensure array items have keys
+ */
+function processChildren(children: React.ReactNode): React.ReactNode {
+  // If it's an array, ensure each element has a key
+  if (Array.isArray(children)) {
+    return children.map((child, index) => ensureElementKey(child, index));
+  }
+
+  // Otherwise, return as is
+  return children;
+}
+
+/**
+ * Bloxi's version of React.createElement with automatic key handling
+ */
+export function createElement<P extends object>(
+  type: React.ElementType<P>,
+  props?: P & { children?: React.ReactNode },
+  ...children: React.ReactNode[]
+): React.ReactElement {
+  const finalProps = props || ({} as P);
+
+  // Handle children with proper key management
+  if (children && children.length > 0) {
+    // Single child doesn't need a key
+    if (children.length === 1) {
+      (finalProps as any).children = children[0];
+    } else {
+      // Process multiple children for keys
+      (finalProps as any).children = children.map((child, index) =>
+        ensureElementKey(child, index)
+      );
+    }
+  } else if ((finalProps as any).children) {
+    // Also process children if provided in props
+    (finalProps as any).children = processChildren(
+      (finalProps as any).children
+    );
+  }
+
+  // Apply key from common identifiers if not explicitly provided
+  if (
+    (finalProps as any).key == null &&
+    ((finalProps as any).id ||
+      (finalProps as any)["data-testid"] ||
+      (finalProps as any)["data-id"])
+  ) {
+    (finalProps as any).key =
+      (finalProps as any).id ||
+      (finalProps as any)["data-testid"] ||
+      (finalProps as any)["data-id"];
+  }
+
+  return React.createElement(type, finalProps);
+}

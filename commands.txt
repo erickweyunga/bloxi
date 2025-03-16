@@ -1,0 +1,19 @@
+# From the root of your monorepo
+# Clean node_modules and reinstall all dependencies
+pnpm -r exec -- rm -rf node_modules dist .vite
+
+# Clean pnpm store (optional, use with caution)
+pnpm store prune
+
+# Reinstall dependencies
+pnpm install --force
+
+# Build the core package with verbose logging
+pnpm --filter @bloxi/core build
+
+# Optional: Check the generated files
+ls -la packages/core/dist
+
+# Start the example with verbose logging
+cd examples/basic
+pnpm dev --debug
