@@ -1,18 +1,17 @@
 import React, { JSX } from "react";
 import { createElement } from "./createElement";
 import { AppearanceProps, CommonProps, SpacingProps } from "./types";
-import {
-  isResponsiveObject,
-  parseResponsiveStyle,
-} from "./utils/responsive";
+import { isResponsiveObject, parseResponsiveStyle } from "./utils/responsive";
 import { propsToStyle } from "./utils/styleProcessor";
 
 // Utility type for style components
 export type StyleComponentProps = CommonProps & SpacingProps & AppearanceProps;
 
 /**
- * Complete list of CSS properties that should be moved to the style object
- * This ensures all CSS properties are properly handled
+ * Complete list of CSS properties that should be moved to the style object.
+ * This ensures all CSS properties are properly handled. This list includes
+ * layout, spacing, typography, appearance, border, flex, grid, transforms,
+ * transitions, and miscellaneous CSS properties.
  */
 export const CSS_PROPERTIES = [
   // Layout
@@ -206,10 +205,27 @@ export const CSS_PROPERTIES = [
   "scrollSnapType",
   "scrollSnapAlign",
   "touchAction",
+
+  // Extended Properties
+  // Adding additional properties like animations, filters, etc.
+  "backdropFilter", // Applies graphical effects to the area behind an element
+  "mixBlendMode", // Defines how an element's content should blend with the background
+  "clipPath", // Clips the content to a shape
+  "resize", // Allows the user to resize elements
+  "willChange", // Improves performance by telling the browser which properties will change
+  "mask", // Defines an area of the element to mask
+  "maskImage", // Specifies an image as a mask
+  "filter", // Defines an effect to apply to an element, such as blur or grayscale
+  "backdropFilter", // Similar to filter but applied to the area behind an element
+  "objectFit", // Specifies how an element's content should fit within its container
+  "objectPosition", // Defines the position of an element's content in the object box
 ];
 
 /**
- * Creates a styled component with automatic style prop handling and responsive support
+ * Creates a styled component with automatic style prop handling and responsive support.
+ *
+ * This function allows you to create components that automatically handle a wide range of CSS
+ * properties (including layout, spacing, typography, etc.) and supports responsive design.
  *
  * @param defaultElement Default HTML element to render
  * @param displayName Optional name for debugging
@@ -261,7 +277,13 @@ export function createStyleComponent<
 }
 
 /**
- * Creates a component extension that inherits from another component
+ * Creates a component extension that inherits from another component.
+ * This function is used to extend the behavior and styling of an existing component.
+ *
+ * @param BaseComponent The base component to extend from
+ * @param defaultProps Default props to apply to the extended component
+ * @param displayName Optional display name for debugging
+ * @returns The extended component
  */
 export function extendComponent<
   BaseProps extends StyleComponentProps,

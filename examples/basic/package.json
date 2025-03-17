@@ -10,8 +10,10 @@
   },
   "dependencies": {
     "@bloxi/core": "workspace:*",
+    "@tailwindcss/vite": "^4.0.14",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "tailwindcss": "^4.0.14"
   },
   "devDependencies": {
     "@types/react": "^18.2.15",

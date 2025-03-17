@@ -1,5 +1,6 @@
 /**
  * Default breakpoints in pixels
+ * These breakpoints define standard screen sizes for responsive styling.
  */
 export const defaultBreakpoints = {
   xs: 480,
@@ -10,7 +11,10 @@ export const defaultBreakpoints = {
   "2xl": 1536,
 };
 
-// Breakpoint type for TypeScript
+/**
+ * Type definition for breakpoint keys.
+ * This includes predefined breakpoints and allows custom string keys.
+ */
 export type BreakpointKey =
   | "base"
   | "xs"
@@ -22,8 +26,8 @@ export type BreakpointKey =
   | string;
 
 /**
- * Type for responsive prop values
- * Allows using different values at different breakpoints
+ * Type for responsive property values.
+ * Allows specifying different values for different breakpoints.
  */
 export type ResponsiveValue<T> =
   | T
@@ -39,13 +43,16 @@ export type ResponsiveValue<T> =
     };
 
 /**
- * Type for all CSS properties that can be responsive
- * Using Record to simplify complex type unions
+ * Type definition for styles that support responsive values.
  */
 export type ResponsiveStyle = Record<string, ResponsiveValue<any>>;
 
 /**
- * Determines if a value is a responsive object
+ * Checks if a given value is a responsive object.
+ * A responsive object contains keys matching predefined breakpoints.
+ *
+ * @param value - The value to check.
+ * @returns `true` if the value is a responsive object, otherwise `false`.
  */
 export function isResponsiveObject<T>(
   value: any
@@ -61,10 +68,11 @@ export function isResponsiveObject<T>(
 }
 
 /**
- * Converts responsive values into CSS custom properties and media queries
- * that will work in style objects.
+ * Converts responsive values into CSS custom properties and media queries.
+ * This function extracts responsive styles and applies them dynamically.
  *
- * Simplified to avoid complex union types
+ * @param obj - The object containing style properties with possible responsive values.
+ * @returns A record of styles with responsive values converted to CSS variables.
  */
 export function createResponsiveStyles(
   obj: Record<string, any>
@@ -83,7 +91,7 @@ export function createResponsiveStyles(
   Object.entries(obj).forEach(([prop, value]) => {
     if (value === undefined) return;
 
-    // If not a responsive object, just use the value directly
+    // If not a responsive object, use the value directly
     if (!isResponsiveObject(value)) {
       result[prop] = value;
       return;
@@ -119,7 +127,12 @@ export function createResponsiveStyles(
 }
 
 /**
- * Get a base value from a responsive value (for server rendering or fallbacks)
+ * Retrieves the base value from a responsive value object.
+ * This is useful for server-side rendering or providing fallback values.
+ *
+ * @param value - The responsive value object or a direct value.
+ * @param defaultValue - A fallback value if no valid base value is found.
+ * @returns The base value if available, otherwise the first available breakpoint value.
  */
 export function getResponsiveValue<T>(
   value: ResponsiveValue<T> | undefined,
@@ -127,24 +140,24 @@ export function getResponsiveValue<T>(
 ): T | undefined {
   if (value === undefined) return defaultValue;
 
-  // If it's not a responsive object, just return it
+  // If it's not a responsive object, return it directly
   if (!isResponsiveObject(value)) {
     return value as T;
   }
 
-  // It's a responsive object
+  // Extract base or first available breakpoint value
   const responsiveObj = value as { [key in BreakpointKey]?: T };
-
-  // Use base or first defined breakpoint
   return responsiveObj.base !== undefined
     ? responsiveObj.base
     : Object.values(responsiveObj).find((v) => v !== undefined) || defaultValue;
 }
 
 /**
- * Convert responsive values to CSS variables that can be used with media queries in runtime
+ * Parses responsive styles into a format suitable for CSS variables.
+ * This function ensures that responsive values can be used dynamically at runtime.
  *
- * Simplified to avoid complex type issues
+ * @param style - The object containing responsive style properties.
+ * @returns A processed style object with responsive values converted to CSS variables.
  */
 export function parseResponsiveStyle(
   style: Record<string, any> = {}

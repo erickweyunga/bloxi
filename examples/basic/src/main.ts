@@ -1,6 +1,6 @@
-import { createElement } from "@bloxi/core";
+import { createElement} from "@bloxi/core";
 import { renderRoot } from "@bloxi/core";
-import App from "./App";
+import LandingPage from "./App";
 
-const appElement = createElement(App) as React.ReactElement;
+const appElement = createElement(LandingPage) as React.ReactElement;
 renderRoot(appElement);

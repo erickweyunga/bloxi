@@ -1,7 +1,7 @@
 export { createElement } from "./core/createElement";
-export { renderRoot, render, createApp } from "./core/renderer";
+export { renderRoot, render } from "./core/renderer";
 export { mapItems, createContainer, createList } from "./core/utils/createList";
-export { StyleComponentProps as HTMLElementProps, createStyleComponent, extendComponent } from './core/createStyleComponent';
+export { StyleComponentProps as HTMLElementProps, createStyleComponent } from './core/createStyleComponent';
 export * from "./core/types";
 export * from "./core/bloxi";
 export * from "./core/bloxi/layout";

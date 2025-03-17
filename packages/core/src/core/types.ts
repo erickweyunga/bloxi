@@ -14,6 +14,24 @@ export interface CommonProps {
   onClick?: React.MouseEventHandler;
   onMouseEnter?: React.MouseEventHandler;
   onMouseLeave?: React.MouseEventHandler;
+  onFocus?: React.FocusEventHandler;
+  onBlur?: React.FocusEventHandler;
+  onChange?: React.ChangeEventHandler;
+  onSubmit?: React.FormEventHandler;
+  onKeyDown?: React.KeyboardEventHandler;
+  onKeyUp?: React.KeyboardEventHandler;
+  onKeyPress?: React.KeyboardEventHandler;
+  // Accessibility props
+  "aria-label"?: string;
+  "aria-labelledby"?: string;
+  "aria-describedby"?: string;
+  "aria-hidden"?: boolean;
+  role?: string;
+  tabIndex?: number;
+  // Data attributes
+  dataAttributes?: { [key: string]: string };
+  // Ref
+  ref?: React.Ref<any>;
   [key: string]: any;
 }
 
@@ -69,6 +87,9 @@ export interface AppearanceProps extends DisplayProps {
   borderLeft?: React.CSSProperties["borderLeft"];
   borderRadius?: React.CSSProperties["borderRadius"];
   boxShadow?: React.CSSProperties["boxShadow"];
+  borderStyle?: React.CSSProperties["borderStyle"];
+  borderWidth?: React.CSSProperties["borderWidth"];
+  borderColor?: React.CSSProperties["borderColor"];
 }
 
 /**
@@ -123,4 +144,64 @@ export interface TypographyProps {
   textDecoration?: React.CSSProperties["textDecoration"];
   whiteSpace?: React.CSSProperties["whiteSpace"];
   textOverflow?: React.CSSProperties["textOverflow"];
+}
+
+/**
+ * Transition and animation props
+ */
+export interface TransitionAnimationProps {
+  transition?: React.CSSProperties["transition"];
+  transitionProperty?: React.CSSProperties["transitionProperty"];
+  transitionDuration?: React.CSSProperties["transitionDuration"];
+  transitionTimingFunction?: React.CSSProperties["transitionTimingFunction"];
+  transitionDelay?: React.CSSProperties["transitionDelay"];
+  animation?: React.CSSProperties["animation"];
+  animationName?: React.CSSProperties["animationName"];
+  animationDuration?: React.CSSProperties["animationDuration"];
+  animationTimingFunction?: React.CSSProperties["animationTimingFunction"];
+  animationDelay?: React.CSSProperties["animationDelay"];
+  animationIterationCount?: React.CSSProperties["animationIterationCount"];
+  animationDirection?: React.CSSProperties["animationDirection"];
+  animationPlayState?: React.CSSProperties["animationPlayState"];
+}
+
+/**
+ * Transform and filter props
+ */
+export interface TransformFilterProps {
+  transform?: React.CSSProperties["transform"];
+  transformOrigin?: React.CSSProperties["transformOrigin"];
+  filter?: React.CSSProperties["filter"];
+  perspective?: React.CSSProperties["perspective"];
+  rotate?: React.CSSProperties["rotate"];
+  scale?: React.CSSProperties["scale"];
+  translate?: React.CSSProperties["translate"];
+}
+
+/**
+ * Shadow and blur props
+ */
+export interface ShadowBlurProps {
+  boxShadow?: React.CSSProperties["boxShadow"];
+  textShadow?: React.CSSProperties["textShadow"];
+  filterBlur?: React.CSSProperties["filter"];
+}
+
+/**
+ * Pointer and cursor props
+ */
+export interface PointerProps {
+  cursor?: React.CSSProperties["cursor"];
+  pointerEvents?: React.CSSProperties["pointerEvents"];
+}
+
+/**
+ * Miscellaneous props
+ */
+export interface MiscProps {
+  userSelect?: React.CSSProperties["userSelect"];
+  resize?: React.CSSProperties["resize"];
+  willChange?: React.CSSProperties["willChange"];
+  visibility?: React.CSSProperties["visibility"];
+  overflowWrap?: React.CSSProperties["overflowWrap"];
 }

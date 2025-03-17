@@ -3,7 +3,8 @@ import { BxFlex, BxFlexProps } from "./BxFlex";
 import { HtmlDiv } from "..";
 
 /**
- * BxStack props extend BxFlexProps with stack-specific properties
+ * BxStack props extend BxFlexProps with stack-specific properties.
+ * These props provide configuration for creating a stack layout with consistent spacing and optional dividers.
  */
 export interface BxStackProps extends BxFlexProps {
   spacing?: number | string;
@@ -15,9 +16,13 @@ export interface BxStackProps extends BxFlexProps {
 }
 
 /**
- * BxStack component for creating stacked layouts with consistent spacing
+ * BxStack component for creating stacked layouts with consistent spacing.
+ * Optionally adds dividers between stack items.
+ *
+ * @param props - The props for configuring the stack layout including spacing, dividers, and orientation.
+ * @returns A React element with a stacked layout.
  */
-export const BxStack = (props: BxStackProps): React.ReactElement => {
+export const BxStack = (props: BxStackProps): React.ReactNode => {
   const {
     spacing = "1rem",
     horizontal = false,

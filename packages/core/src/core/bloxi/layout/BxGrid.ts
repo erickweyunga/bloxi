@@ -4,7 +4,8 @@ import { StyleComponentProps } from "../../../core/createStyleComponent";
 import { ResponsiveValue, getResponsiveValue } from "../../utils/responsive";
 
 /**
- * BxGrid props extend StyleComponentProps with grid-specific properties
+ * BxGrid props extend StyleComponentProps with grid-specific properties.
+ * These props allow for creating customizable grid layouts with support for responsiveness.
  */
 export interface BxGridProps extends StyleComponentProps {
   columns?: ResponsiveValue<number | string>;
@@ -40,7 +41,10 @@ export interface BxGridProps extends StyleComponentProps {
 }
 
 /**
- * Process a value that might need unit conversion
+ * Process a value that might need unit conversion (e.g., from number to 'px' string).
+ *
+ * @param value - A number or string value to process.
+ * @returns The value as a string with 'px' appended if it's a number, or the string itself.
  */
 const processValue = (
   value: string | number | undefined
@@ -50,9 +54,14 @@ const processValue = (
 };
 
 /**
- * BxGrid component for creating grid layouts
+ * BxGrid component for creating grid layouts. It renders a flexible grid container
+ * with support for various grid properties, including template areas, auto flow,
+ * gaps, and more.
+ *
+ * @param props - The props for configuring the grid layout.
+ * @returns A React element with grid styles applied.
  */
-export const BxGrid = (props: BxGridProps): React.ReactElement => {
+export const BxGrid = (props: BxGridProps): React.ReactNode => {
   const {
     columns,
     rows,
@@ -74,6 +83,13 @@ export const BxGrid = (props: BxGridProps): React.ReactElement => {
     ...rest
   } = props;
 
+  /**
+   * Process columns values to ensure they are correctly formatted for CSS grid.
+   * This includes handling values like 'repeat' and 'fr'.
+   *
+   * @param val - The value for columns, either a number or a string.
+   * @returns The processed value, formatted for grid template columns.
+   */
   const processColumns = (
     val: number | string | undefined
   ): string | undefined => {
@@ -97,6 +113,7 @@ export const BxGrid = (props: BxGridProps): React.ReactElement => {
     return undefined;
   };
 
+  // Extract responsive values for grid properties
   const columnsValue = getResponsiveValue(columns);
   const rowsValue = getResponsiveValue(rows);
   const gapValue = getResponsiveValue(gap);
@@ -109,6 +126,7 @@ export const BxGrid = (props: BxGridProps): React.ReactElement => {
   const autoRowsValue = getResponsiveValue(autoRows);
   const autoFlowValue = getResponsiveValue(autoFlow);
 
+  // Build the combined CSS style object
   const combinedStyle: React.CSSProperties = {
     display: inline ? "inline-grid" : "grid",
     gridTemplateColumns:
@@ -126,6 +144,7 @@ export const BxGrid = (props: BxGridProps): React.ReactElement => {
     ...style,
   };
 
+  // Process and apply gaps (gridGap, rowGap, columnGap)
   if (gapValue !== undefined) {
     combinedStyle.gap = processValue(gapValue);
     // For older browsers, also set gridGap
@@ -144,6 +163,7 @@ export const BxGrid = (props: BxGridProps): React.ReactElement => {
     (combinedStyle as any).gridColumnGap = processValue(columnGapValue);
   }
 
+  // Return the grid component with applied styles
   return HtmlDiv({
     "data-component": "BxGrid",
     style: combinedStyle,

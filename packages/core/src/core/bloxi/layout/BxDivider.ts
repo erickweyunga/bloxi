@@ -18,7 +18,7 @@ export interface BxDividerProps extends StyleComponentProps {
 /**
  * BxDivider component for creating separators
  */
-export const BxDivider = (props: BxDividerProps): React.ReactElement => {
+export const BxDivider = (props: BxDividerProps): React.ReactNode => {
   const {
     orientation = "horizontal",
     color = "#e2e8f0",

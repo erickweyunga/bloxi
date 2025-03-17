@@ -2,9 +2,14 @@ import React from "react";
 import { isResponsiveObject, getResponsiveValue } from "./responsive";
 
 /**
- * Helper to convert props to style object
- * This ensures all CSS properties are properly put in the style object
- * rather than being passed directly as DOM props
+ * Converts component props into style and non-style properties.
+ *
+ * This function ensures that CSS-related props are properly moved to the `style` object,
+ * while other props remain unchanged and are passed to the component.
+ *
+ * @param props - The component props containing possible style and other properties.
+ * @param cssProperties - A list of valid CSS properties to extract into the `style` object.
+ * @returns An object containing `styleProps` for inline styling and `otherProps` for remaining properties.
  */
 export function propsToStyle(
   props: Record<string, any>,
@@ -16,26 +21,20 @@ export function propsToStyle(
   const styleProps: Record<string, any> = {};
   const otherProps: Record<string, any> = {};
 
-  // Process all props
   Object.entries(props).forEach(([key, value]) => {
-    // Skip undefined values
-    if (value === undefined) return;
+    if (value === undefined) return; // Skip undefined values
 
-    // If this is a CSS property, add it to style props
     if (cssProperties.includes(key)) {
-      // Process responsive values
+      // Handle responsive values
       if (isResponsiveObject(value)) {
-        // Get base value for now (full responsive handling would use CSS variables)
         const baseValue = getResponsiveValue(value);
         if (baseValue !== undefined) {
           styleProps[key] = processStyleValue(key, baseValue);
         }
       } else {
-        // Process regular values
         styleProps[key] = processStyleValue(key, value);
       }
     } else {
-      // Otherwise, keep it as a regular DOM prop
       otherProps[key] = value;
     }
   });
@@ -44,38 +43,35 @@ export function propsToStyle(
 }
 
 /**
- * Process a style value with appropriate units
+ * Processes a style value and applies appropriate units where necessary.
+ *
+ * - Converts numeric values (except unitless CSS properties) to `px`.
+ * - Returns undefined for null or undefined values.
+ *
+ * @param key - The CSS property name.
+ * @param value - The value to process.
+ * @returns The formatted value with appropriate units.
  */
 export function processStyleValue(key: string, value: any): any {
-  // Return undefined for undefined/null values
-  if (value === undefined || value === null) return undefined;
+  if (value == null) return undefined; // Handle null and undefined together
 
-  // Convert numbers to pixels for spacing properties
-  if (typeof value === "number") {
-    // Properties that should not be converted to pixels
-    const noUnitProperties = [
-      "flex",
-      "flexGrow",
-      "flexShrink",
-      "opacity",
-      "zIndex",
-      "fontWeight",
-      "lineHeight",
-      "scale",
-      "order",
-      "columnCount",
-      "fillOpacity",
-      "strokeOpacity",
-      "strokeWidth",
-    ];
+  const unitlessProperties = new Set([
+    "flex",
+    "flexGrow",
+    "flexShrink",
+    "opacity",
+    "zIndex",
+    "fontWeight",
+    "lineHeight",
+    "scale",
+    "order",
+    "columnCount",
+    "fillOpacity",
+    "strokeOpacity",
+    "strokeWidth",
+  ]);
 
-    if (noUnitProperties.includes(key)) {
-      return value;
-    }
-
-    // Convert to px for all other numeric values
-    return `${value}px`;
-  }
-
-  return value;
+  return typeof value === "number" && !unitlessProperties.has(key)
+    ? `${value}px`
+    : value;
 }

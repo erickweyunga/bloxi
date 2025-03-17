@@ -4,7 +4,8 @@ import { StyleComponentProps } from "../../../core/createStyleComponent";
 import { ResponsiveValue, getResponsiveValue } from "../../utils/responsive";
 
 /**
- * BxGridItem props extend StyleComponentProps with grid item-specific properties
+ * BxGridItem props extend StyleComponentProps with grid item-specific properties.
+ * These props allow customization of grid item behavior within a grid layout.
  */
 export interface BxGridItemProps extends StyleComponentProps {
   colStart?: ResponsiveValue<number | string>;
@@ -19,9 +20,13 @@ export interface BxGridItemProps extends StyleComponentProps {
 }
 
 /**
- * BxGridItem component for grid cell items
+ * BxGridItem component for defining grid cell items within a grid layout.
+ * It allows customization of grid position, spanning, and alignment of grid items.
+ *
+ * @param props - The props for configuring the grid item layout within the grid.
+ * @returns A React element with grid item styles applied.
  */
-export const BxGridItem = (props: BxGridItemProps): React.ReactElement => {
+export const BxGridItem = (props: BxGridItemProps): React.ReactNode => {
   const {
     colStart,
     colEnd,
@@ -36,7 +41,7 @@ export const BxGridItem = (props: BxGridItemProps): React.ReactElement => {
     ...rest
   } = props;
 
-  // Extract responsive values
+  // Extract responsive values for the grid item properties
   const colStartValue = getResponsiveValue(colStart);
   const colEndValue = getResponsiveValue(colEnd);
   const rowStartValue = getResponsiveValue(rowStart);
@@ -47,7 +52,7 @@ export const BxGridItem = (props: BxGridItemProps): React.ReactElement => {
   const justifySelfValue = getResponsiveValue(justifySelf);
   const alignSelfValue = getResponsiveValue(alignSelf);
 
-  // Process span shortcuts
+  // Process span shortcuts, e.g., 'span 2' for colSpan or rowSpan
   const processedColEnd = colSpanValue
     ? typeof colStartValue === "number"
       ? colStartValue + colSpanValue
@@ -60,7 +65,7 @@ export const BxGridItem = (props: BxGridItemProps): React.ReactElement => {
       : `span ${rowSpanValue}`
     : rowEndValue;
 
-  // Build the combined style object
+  // Build the combined style object for the grid item
   const combinedStyle: React.CSSProperties = {
     gridColumnStart: colStartValue,
     gridColumnEnd: processedColEnd,
@@ -72,7 +77,7 @@ export const BxGridItem = (props: BxGridItemProps): React.ReactElement => {
     ...style, // Include any additional styles passed in
   };
 
-  // All CSS properties are now in the style object
+  // Return the grid item component with applied styles
   return HtmlDiv({
     style: combinedStyle,
     ...rest,
