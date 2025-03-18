@@ -19,17 +19,31 @@ class ErrorBoundary extends Component<
     console.error("Error caught in ErrorBoundary:", error, errorInfo);
   }
 
+  /**
+   * Prevents JSON.stringify from breaking on circular references.
+   */
+  safeStringify(obj: any): string {
+    const seen = new WeakSet();
+    return JSON.stringify(obj, function (key, value) {
+      if (typeof value === "object" && value !== null) {
+        if (seen.has(value)) return "[Circular]";
+        seen.add(value);
+      }
+      return value;
+    });
+  }
+
   render() {
     if (this.state.hasError) {
       return HtmlDiv({
-        children: `
-            An error occurred while rendering this component.
-            ${this.props.children}
-        `,
+        children: `An error occurred while rendering this component.`,
       });
     }
 
-    return this.props.children;
+    // Apply safe JSON.stringify
+    const safeChildren = this.safeStringify({ children: this.props.children });
+
+    return HtmlDiv({ children: safeChildren });
   }
 }
 
