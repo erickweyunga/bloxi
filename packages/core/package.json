@@ -1,6 +1,6 @@
 {
   "name": "@bloxi/core",
-  "version": "0.1.14",
+  "version": "0.1.15",
   "description": "A function-based React meta-framework for TypeScript, enabling JSX-free UI development with a simple and declarative API.",
   "type": "module",
   "main": "dist/index.cjs.js",
