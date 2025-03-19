@@ -3,53 +3,40 @@ import { createRoot, Root } from "react-dom/client";
 import { createElement } from "./createElement";
 import { ErrorBoundary } from "./utils/errorBoundary";
 
-// Map to store root instances for multiple containers
+// Store root instances for multiple containers
 const rootInstances = new Map<HTMLElement, Root>();
 
 /**
- * Renders a component to the DOM.
- * If a root already exists in the container, it uses the existing root instance to render the component.
- * If no root exists, it creates a new root and associates it with the container.
- * Wraps the component inside an `ErrorBoundary` to catch any rendering errors.
+ * Renders a component to the DOM
  *
- * @param component The React element or node to render.
- * @param container The container (HTML element) to render the component into.
+ * Creates or reuses a root instance and renders the component with error handling
  */
 export function render(
   component: React.ReactElement | React.ReactNode,
   container: HTMLElement
 ): void {
+  // Get existing root or create new one
   let root = rootInstances.get(container);
-
   if (!root) {
     root = createRoot(container);
     rootInstances.set(container, root);
   }
 
-  // Wrap the component in ErrorBoundary
+  // Render with error boundary protection
   root.render(
-    createElement(
-      StrictMode,
-      {},
-      createElement(
-        ErrorBoundary,
-        {
-          children: JSON.stringify({ children: component }),
-        },
-        component
-      )
-    )
+    createElement(StrictMode, {}, createElement(ErrorBoundary, {}, component))
   );
 }
 
 /**
- * Renders a component to the DOM element with the given root ID.
- * If the element with the specified root ID is not found, an error is thrown.
- * This function calls `render` to render the component in the found container.
+ * Renders a component to a root element by ID
  *
- * @param component The React element or node to render.
- * @param rootId The ID of the root HTML element to render the component into (defaults to "root").
- * @throws Error If the root element with the specified ID is not found.
+ * @example
+ * // Renders to <div id="root"></div>
+ * renderRoot(App());
+ *
+ * // Renders to <div id="custom-root"></div>
+ * renderRoot(Dashboard(), "custom-root");
  */
 export function renderRoot(
   component: React.ReactElement | React.ReactNode,
@@ -65,26 +52,28 @@ export function renderRoot(
 }
 
 /**
- * Creates an app instance that can mount and unmount components to/from specific containers.
- * The app instance manages the rendering of components, optionally with `StrictMode`, and ensures that errors are caught via `ErrorBoundary`.
+ * Creates an app instance with mount/unmount methods
  *
- * @param options Options to customize the app behavior.
- * - `strict`: A boolean indicating whether to use React's StrictMode for rendering (defaults to `true`).
+ * Useful for managing multiple app instances or dynamic mounting
  *
- * @returns An object with `mount` and `unmount` methods to manage component rendering.
+ * @example
+ * const app = createApp();
+ *
+ * // Mount to a container
+ * app.mount({
+ *   component: Dashboard(),
+ *   container: "#dashboard-container"
+ * });
+ *
+ * // Later unmount it
+ * app.unmount("#dashboard-container");
  */
 export function createApp(options: { strict?: boolean } = {}) {
   const { strict = true } = options;
 
   return {
     /**
-     * Mounts a component to a specified container element.
-     * If the container is provided as a string, it attempts to find the element using `document.querySelector`.
-     * Wraps the component inside an `ErrorBoundary` to catch any rendering errors.
-     *
-     * @param component The React element or node to render.
-     * @param container The container (HTML element or selector string) to mount the component into.
-     * @throws Error If the container element is not found.
+     * Mounts a component to a container
      */
     mount({
       component,
@@ -93,6 +82,7 @@ export function createApp(options: { strict?: boolean } = {}) {
       component: React.ReactElement | React.ReactNode;
       container: HTMLElement | string;
     }): void {
+      // Find the target element
       const targetElement =
         typeof container === "string"
           ? (document.querySelector(container) as HTMLElement | null)
@@ -102,47 +92,29 @@ export function createApp(options: { strict?: boolean } = {}) {
         throw new Error(`Target element not found: ${container}`);
       }
 
+      // Create or reuse root
       let root = rootInstances.get(targetElement);
-
       if (!root) {
         root = createRoot(targetElement);
         rootInstances.set(targetElement, root);
       }
 
-      // Wrap the component in ErrorBoundary and render with optional StrictMode
+      // Render with appropriate wrapping
       if (strict) {
         root.render(
           createElement(
             StrictMode,
             {},
-            createElement(
-              ErrorBoundary,
-              {
-                children: JSON.stringify({ children: component }),
-              },
-              component
-            )
+            createElement(ErrorBoundary, {}, component)
           )
         );
       } else {
-        root.render(
-          createElement(
-            ErrorBoundary,
-            {
-              children: JSON.stringify({ children: component }),
-            },
-            component
-          )
-        );
+        root.render(createElement(ErrorBoundary, {}, component));
       }
     },
 
     /**
-     * Unmounts a component from the specified container element.
-     * If the container is provided as a string, it attempts to find the element using `document.querySelector`.
-     * Removes the root instance associated with the container element from the `rootInstances` map.
-     *
-     * @param container The container (HTML element or selector string) from which to unmount the component.
+     * Unmounts a component from a container
      */
     unmount(container: HTMLElement | string) {
       const targetElement =

@@ -1,7 +1,4 @@
-/**
- * Core implementation of Wouter adapter for Bloxi
- */
-import { createElement } from "@bloxi/core";
+import { createElement, hookable } from "@bloxi/core";
 import {
   Redirect as WRedirect,
   Route as WRoute,
@@ -20,11 +17,10 @@ import {
   LinkProps,
   RedirectProps,
 } from "./types";
+import { ReactNode } from "react";
 
 /**
  * SwitchRoutes component for exclusive routing
- *
- * Only renders the first matching route among its children.
  */
 export function SwitchRoutes({ component, location }: SwitchRoutesProps) {
   return createElement(Switch, {
@@ -68,29 +64,81 @@ export function Router({ hook, base, children, ...props }: RouterProps) {
 }
 
 /**
- * Hook for matching the current location against a pattern
+ * Hook-enabled components that use Wouter hooks
  */
-export function useRoute(pattern: string | RegExp) {
+
+// Props for ActiveLink component
+interface ActiveLinkProps extends Omit<LinkProps, "className"> {
+  className?: string;
+  activeClassName?: string;
+}
+
+// ActiveLink component that highlights when route matches
+export const ActiveLink = hookable<ActiveLinkProps, ReactNode>(
+  ({
+    href,
+    children,
+    className = "",
+    activeClassName = "active",
+    ...props
+  }: ActiveLinkProps) => {
+    const [isActive] = wUseRoute(href);
+
+    const finalClassName = isActive
+      ? `${className} ${activeClassName}`.trim()
+      : className;
+
+    return createElement(WLink, {
+      href,
+      className: finalClassName,
+      ...props,
+      children,
+    });
+  }
+);
+
+// Props for LocationDisplay component
+interface LocationDisplayProps {
+  children?: ReactNode;
+  format?: (location: string) => string | undefined;
+}
+
+// LocationDisplay component that shows current location
+export const LocationDisplay = hookable<LocationDisplayProps, ReactNode>(
+  ({ children, format }: LocationDisplayProps) => {
+    const [location] = wUseLocation();
+    const displayText = format
+      ? format(location)
+      : `Current location: ${location}`;
+
+    return createElement("div", {
+      children: children || displayText,
+    });
+  }
+);
+
+/**
+ * Type-safe hooks - should only be used inside hookable components
+ */
+export function useRoute(
+  pattern: string | RegExp
+): [boolean, Record<string, string> | null] {
   return wUseRoute(pattern);
 }
 
-/**
- * Hook for accessing and manipulating the current location
- */
-export function useLocation() {
+export function useLocation(): [
+  string,
+  (to: string, options?: { replace?: boolean; state?: any }) => void,
+] {
   return wUseLocation();
 }
 
-/**
- * Hook for accessing route parameters
- */
-export function useParams() {
-  return wUseParams();
+export function useParams<
+  T extends Record<string, string> = Record<string, string>,
+>(): T {
+  return wUseParams() as T;
 }
 
-/**
- * Hook for accessing the router configuration
- */
-export function useRouter() {
+export function useRouter(): { base: string } {
   return wUseRouter();
 }
