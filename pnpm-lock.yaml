@@ -159,6 +159,55 @@ importers:
         specifier: ^4.7.3
         version: 4.9.5
 
+  packages/router:
+    dependencies:
+      '@bloxi/core':
+        specifier: '>=0.1.15'
+        version: link:../core
+      react:
+        specifier: '>=19.0.0'
+        version: 19.0.0
+      react-dom:
+        specifier: '>=19.0.0'
+        version: 19.0.0(react@19.0.0)
+      wouter:
+        specifier: ^3.6.0
+        version: 3.6.0(react@19.0.0)
+    devDependencies:
+      '@rollup/plugin-commonjs':
+        specifier: ^28.0.3
+        version: 28.0.3(rollup@4.35.0)
+      '@rollup/plugin-node-resolve':
+        specifier: ^16.0.1
+        version: 16.0.1(rollup@4.35.0)
+      '@rollup/plugin-terser':
+        specifier: ^0.4.3
+        version: 0.4.4(rollup@4.35.0)
+      '@rollup/plugin-typescript':
+        specifier: ^12.1.2
+        version: 12.1.2(rollup@4.35.0)(tslib@2.8.1)(typescript@5.8.2)
+      '@types/react':
+        specifier: ^19.0.10
+        version: 19.0.10
+      '@types/react-dom':
+        specifier: ^19.0.0
+        version: 19.0.4(@types/react@19.0.10)
+      rimraf:
+        specifier: ^6.0.1
+        version: 6.0.1
+      rollup:
+        specifier: ^4.35.0
+        version: 4.35.0
+      rollup-plugin-dts:
+        specifier: ^6.1.1
+        version: 6.1.1(rollup@4.35.0)(typescript@5.8.2)
+      typescript:
+        specifier: ^5.1.6
+        version: 5.8.2
+      vitest:
+        specifier: ^3.0.0
+        version: 3.0.8
+
 packages:
 
   /@ampproject/remapping@2.3.0:
@@ -4053,6 +4102,10 @@ packages:
     engines: {node: '>=16 || 14 >=14.17'}
     dev: true
 
+  /mitt@3.0.1:
+    resolution: {integrity: sha512-vKivATfr97l2/QBCYAkXYDbrIWPM2IIKEl7YPhjCvKlG3kE2gm+uBo6nEXK3M5/Ffh/FLpKExzOQ3JJoJGFKBw==}
+    dev: false
+
   /mri@1.2.0:
     resolution: {integrity: sha512-tzzskb3bG8LvYGFF/mDTpq3jpI6Q9wc3LEmBaghu+DdCssd1FakN7Bc0hVNmEyGq1bq3RgfkCb3cmQLpNPOroA==}
     engines: {node: '>=4'}
@@ -4457,6 +4510,11 @@ packages:
       gopd: 1.2.0
       set-function-name: 2.0.2
     dev: true
+
+  /regexparam@3.0.0:
+    resolution: {integrity: sha512-RSYAtP31mvYLkAHrOlh25pCNQ5hWnT106VukGaaFfuJrZFkGRX5GhUAdPqpSDXxOhA2c4akmRuplv1mRqnBn6Q==}
+    engines: {node: '>=8'}
+    dev: false
 
   /resolve-from@4.0.0:
     resolution: {integrity: sha512-pb/MYmXstAkysRFx8piNI1tGFNQIFA3vkE3Gq4EuA1dF6gHp/+vgZqsCGJapvy8N3Q+4o7FwvquPJcnZ7RYy4g==}
@@ -5122,6 +5180,14 @@ packages:
       punycode: 2.3.1
     dev: true
 
+  /use-sync-external-store@1.4.0(react@19.0.0):
+    resolution: {integrity: sha512-9WXSPC5fMv61vaupRkCKCxsPxBocVnwakBEkMIHHpkTTg6icbJtg6jzgtLDm4bl3cSHAca52rYWih0k4K3PfHw==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+    dependencies:
+      react: 19.0.0
+    dev: false
+
   /vite-node@3.0.8:
     resolution: {integrity: sha512-6PhR4H9VGlcwXZ+KWCdMqbtG649xCPZqfI9j2PsK1FcXgEzro5bGHcVKFCTqPLaNKZES8Evqv4LwvZARsq5qlg==}
     engines: {node: ^18.0.0 || ^20.0.0 || >=22.0.0}
@@ -5350,6 +5416,17 @@ packages:
     resolution: {integrity: sha512-BN22B5eaMMI9UMtjrGd5g5eCYPpCPDUy0FJXbYsaT5zYxjFOckS53SQDE3pWkVoWpHXVb3BrYcEN4Twa55B5cA==}
     engines: {node: '>=0.10.0'}
     dev: true
+
+  /wouter@3.6.0(react@19.0.0):
+    resolution: {integrity: sha512-l11eR4urCc+CbY8+pV8HKFHxEqMgffss9aVB1XwiSkLDtH3cI6XpCa50cOzREzL0KwQqrwCVE5dCyeNcCgFpPg==}
+    peerDependencies:
+      react: '>=16.8.0'
+    dependencies:
+      mitt: 3.0.1
+      react: 19.0.0
+      regexparam: 3.0.0
+      use-sync-external-store: 1.4.0(react@19.0.0)
+    dev: false
 
   /wrap-ansi@7.0.0:
     resolution: {integrity: sha512-YVGIj2kamLSTxw6NsZjoBxfSwsn0ycdesmc4p+Q21c5zPuZ1pl+NfxVdxPtdHvmNVOQ6XSYG4AUtyt/Fi7D16Q==}

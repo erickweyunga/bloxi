@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "declaration": true,
+    "declarationDir": "dist/dts",
+    "sourceMap": true,
+    "outDir": "dist",
+    "rootDir": "src",
+    "strict": true,
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "importHelpers": true,
+    "jsx": "react",
+    "typeRoots": [
+      "./node_modules/@types",
+      "./src"
+    ]
+  },
+  "include": ["src/**/*.ts", "src/**/*.d.ts"],
+  "exclude": ["node_modules", "dist", "**/*.test.ts", "examples"]
+}
