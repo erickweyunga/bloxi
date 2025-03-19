@@ -162,7 +162,7 @@ importers:
   packages/router:
     dependencies:
       '@bloxi/core':
-        specifier: '>=0.1.15'
+        specifier: '>=0.1.16'
         version: link:../core
       react:
         specifier: '>=19.0.0'

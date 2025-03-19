@@ -1,14 +1,23 @@
-export { createElement } from "./core/createElement";
+export {
+  createElement,
+  hookable,
+  useElem,
+  useStore,
+  useRun,
+} from "./core/createElement";
 export { renderRoot, render } from "./core/renderer";
 export { mapItems, createContainer, createList } from "./core/utils/createList";
-export { StyleComponentProps as HTMLElementProps, createStyleComponent } from './core/createStyleComponent';
+export {
+  StyleComponentProps as HTMLElementProps,
+  createStyleComponent,
+} from "./core/createStyleComponent";
 export * from "./core/types";
 export * from "./core/bloxi";
 export * from "./core/bloxi/layout";
 
 import React from "react";
 
-import { initMediaQueryRuntime } from './core/mediaQueryRuntime';
+import { initMediaQueryRuntime } from "./core/mediaQueryRuntime";
 initMediaQueryRuntime();
 
 export interface StyleProps {
