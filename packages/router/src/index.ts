@@ -13,6 +13,8 @@ export {
   useRoute,
   useParams,
   useRouter,
+  LocationDisplay,
+  ActiveLink,
 } from "./utils";
 export { useBrowserLocation } from "wouter/use-browser-location";
 export { useHashLocation } from "wouter/use-hash-location";
