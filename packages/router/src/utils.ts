@@ -64,7 +64,7 @@ export function Router({ hook, base, children, ...props }: RouterProps) {
 }
 
 /**
- * Hook-enabled components that use Wouter hooks
+ * Hook-enabled components
  */
 
 // Props for ActiveLink component
@@ -75,13 +75,16 @@ interface ActiveLinkProps extends Omit<LinkProps, "className"> {
 
 // ActiveLink component that highlights when route matches
 export const ActiveLink = hookable<ActiveLinkProps, ReactNode>(
-  ({
-    href,
-    children,
-    className = "",
-    activeClassName = "active",
-    ...props
-  }: ActiveLinkProps) => {
+  (props: { [x: string]: any; href: any; children: any; className?: "" | undefined; activeClassName?: "active" | undefined; }) => {
+    const {
+      href,
+      children,
+      className = "",
+      activeClassName = "active",
+      ...rest
+    } = props;
+
+    // Now hooks are used inside a proper React functional component
     const [isActive] = wUseRoute(href);
 
     const finalClassName = isActive
@@ -91,7 +94,7 @@ export const ActiveLink = hookable<ActiveLinkProps, ReactNode>(
     return createElement(WLink, {
       href,
       className: finalClassName,
-      ...props,
+      ...rest,
       children,
     });
   }
@@ -105,8 +108,12 @@ interface LocationDisplayProps {
 
 // LocationDisplay component that shows current location
 export const LocationDisplay = hookable<LocationDisplayProps, ReactNode>(
-  ({ children, format }: LocationDisplayProps) => {
+  (props: { children: any; format: any; }) => {
+    const { children, format } = props;
+
+    // Now hooks are used inside a proper React functional component
     const [location] = wUseLocation();
+
     const displayText = format
       ? format(location)
       : `Current location: ${location}`;
@@ -118,7 +125,7 @@ export const LocationDisplay = hookable<LocationDisplayProps, ReactNode>(
 );
 
 /**
- * Type-safe hooks - should only be used inside hookable components
+ * Custom hook wrappers - to be used only inside proper React components
  */
 export function useRoute(
   pattern: string | RegExp

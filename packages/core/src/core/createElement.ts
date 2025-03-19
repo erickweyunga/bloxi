@@ -13,16 +13,6 @@ import React, {
 let keyCounter = 0;
 
 /**
- * Symbol marking hook-enabled components
- */
-const USES_HOOKS = Symbol("uses_hooks");
-
-/**
- * Type for hook-enabled components
- */
-type HooksComponent<P = any> = Function & { [USES_HOOKS]?: boolean };
-
-/**
  * Adds a key to React elements that need one
  */
 function ensureElementKey(element: ReactNode, index: number): ReactNode {
@@ -44,31 +34,7 @@ function processChildren(children: ReactNode): ReactNode {
 }
 
 /**
- * Marks a function as hook-enabled
- */
-export function withHooks<T extends Function>(componentFn: T): T {
-  (componentFn as HooksComponent)[USES_HOOKS] = true;
-  return componentFn;
-}
-
-/**
- * Creates a React component that can use hooks
- */
-function createHookComponent<P extends object>(
-  renderFn: (props: P) => ReactNode,
-  props: P
-): ComponentType<P> {
-  const HookComponent: React.FC<P> = (hookProps) => {
-    return renderFn({ ...props, ...hookProps } as P) as ReactElement;
-  };
-
-  HookComponent.displayName = renderFn.name || "BloxiHookComponent";
-  return HookComponent;
-}
-
-/**
  * Creates React elements with automatic key handling
- *
  */
 export function createElement<P extends object>(
   type: React.ElementType<P>,
@@ -105,26 +71,18 @@ export function createElement<P extends object>(
       (finalProps as any)["data-id"];
   }
 
-  // Handle hook-enabled components
-  if (typeof type === "function" && (type as HooksComponent)[USES_HOOKS]) {
-    const HookComponent = createHookComponent(
-      type as (props: P) => ReactNode,
-      finalProps
-    );
-    return React.createElement(HookComponent, finalProps);
-  }
-
   return React.createElement(type, finalProps);
 }
 
 /**
- * Makes a component hook-enabled
+ * Creates a React component that can use hooks
  *
- * Use this to create components that can use React hooks
+ * @param renderFn - A function that will be converted to a React component
+ * @returns A function that creates React elements with the component
  *
  * @example
- * const Counter = hookable(({ initial = 0 }) => {
- *   const [count, setCount] = useStore(initial);
+ * const Counter = hookable(props => {
+ *   const [count, setCount] = useState(props.initial || 0);
  *   return HtmlDiv({
  *     children: [
  *       HtmlButton({ onClick: () => setCount(count + 1), children: "+" }),
@@ -133,44 +91,32 @@ export function createElement<P extends object>(
  *     ]
  *   });
  * });
+ *
+ * // Usage:
+ * Counter({ initial: 5 })
  */
 export function hookable<Props extends object, Result extends ReactNode>(
   renderFn: (props: Props) => Result
-): (props?: Props) => Result {
-  withHooks(renderFn);
-  return (props?: Props) => renderFn(props || ({} as Props));
+): (props?: Props) => ReactElement {
+  // Create a proper React functional component that can use hooks
+  const Component: React.FC<Props> = (props) => {
+    return renderFn(props) as ReactElement;
+  };
+
+  // Set display name for debugging
+  Component.displayName = renderFn.name || "BloxiComponent";
+
+  // Return a function that creates React elements with this component
+  return (props?: Props) => createElement(Component, props || ({} as Props));
 }
 
-/**
- *
- * Manages state in a component
- *
- * @example
- * const [count, setCount] = useStore(0);
- * const [user, setUser] = useStore({ name: "John", age: 30 });
- */
+// Re-export React hooks
 export function useStore<T>(
   initialState: T | (() => T)
 ): [T, React.Dispatch<React.SetStateAction<T>>] {
   return useState<T>(initialState);
 }
 
-/**
- *
- * Runs side effects in your component
- *
- * @example
- * // Runs when component mounts
- * useRun(() => {
- *   console.log("Component mounted");
- *   return () => console.log("Component unmounted");
- * }, []);
- *
- * // Runs when count changes
- * useRun(() => {
- *   document.title = `Count: ${count}`;
- * }, [count]);
- */
 export function useRun(
   effect: React.EffectCallback,
   deps?: React.DependencyList
@@ -178,18 +124,6 @@ export function useRun(
   return useEffect(effect, deps);
 }
 
-/**
- *
- * Creates a mutable reference that persists across renders
- *
- * @example
- * // Reference a DOM element
- * const inputRef = useElem<HTMLInputElement>();
- * HtmlInput({ ref: inputRef });
- *
- * // Store a mutable value
- * const prevCount = useElem(count);
- */
 export function useElem<T>(initialValue: T | null = null): React.RefObject<T> {
   return useRef<T | null>(initialValue) as React.RefObject<T>;
 }

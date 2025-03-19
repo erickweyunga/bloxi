@@ -1,6 +1,6 @@
 {
   "name": "@bloxi/router",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "A lightweight routing adapter for Bloxi framework using Wouter",
   "type": "module",
   "main": "dist/index.cjs.js",
